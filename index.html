@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Windows RDP Wrapper Setup Guide for Public Internet Access</title>
+  <meta name="description" content="Step-by-step Windows RDP Wrapper setup guide for public internet access, including rdpwrap.ini update, installation, configuration, and validation steps." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Windows RDP Wrapper" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Windows RDP Wrapper Setup Guide for Public Internet Access" />
+  <meta property="og:description" content="Install and configure RDP Wrapper with updated rdpwrap.ini and verify fully supported status." />
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:title" content="Windows RDP Wrapper Setup Guide" />
+  <meta property="twitter:description" content="Practical setup steps for RDP Wrapper and rdpwrap.ini updates on Windows." />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: #f7f7f7;
+      color: #222;
+    }
+    main {
+      max-width: 860px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 28px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+    h1 { margin-top: 0; }
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    a { color: #0a58ca; }
+  </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "Windows RDP Wrapper Public Internet Setup",
+      "description": "Install and configure RDP Wrapper with updated rdpwrap.ini and validate support status.",
+      "step": [
+        { "@type": "HowToStep", "text": "Install RDPWInst-v1.6.2.msi." },
+        { "@type": "HowToStep", "text": "Download and extract RDPWrap-v1.6.2.zip." },
+        { "@type": "HowToStep", "text": "Run Notepad as Administrator and open C:\\Program Files\\RDP Wrapper\\rdpwrap.ini." },
+        { "@type": "HowToStep", "text": "Get the latest rdpwrap.ini from the linked GitHub sources." },
+        { "@type": "HowToStep", "text": "Replace local rdpwrap.ini content and run install.bat from the extracted archive." },
+        { "@type": "HowToStep", "text": "Open RDPConf.exe, confirm fully supported, apply, and restart Remote Desktop Service." },
+        { "@type": "HowToStep", "text": "Test multiple user logins." }
+      ]
+    }
+  </script>
+</head>
+<body>
+  <main>
+    <h1>Windows RDP Wrapper</h1>
+    <h2>Public Internet Setup</h2>
+    <p>This page explains how to install, configure, and verify Windows RDP Wrapper for public internet access using the latest <code>rdpwrap.ini</code> definitions.</p>
+
+    <ol>
+      <li>Install <code>RDPWInst-v1.6.2.msi</code>.</li>
+      <li>Download and extract <code>RDPWrap-v1.6.2.zip</code>.</li>
+      <li>Run Notepad as an Administrator.</li>
+      <li>Open the file located at <code>C:\Program Files\RDP Wrapper\rdpwrap.ini</code>.</li>
+      <li>
+        Obtain the latest <code>rdpwrap.ini</code> from GitHub:
+        <ul>
+          <li><a href="https://github.com/sebaxakerhtc/rdpwrap.ini/blob/master/rdpwrap.ini">sebaxakerhtc/rdpwrap.ini</a></li>
+          <li><a href="https://github.com/BobbyCephy/rdpwrap.ini/blob/master/rdpwrap.ini">BobbyCephy/rdpwrap.ini</a></li>
+        </ul>
+      </li>
+      <li>Replace the content of the local <code>rdpwrap.ini</code> file with the content from GitHub.</li>
+      <li>Run the <code>install.bat</code> file extracted in step 2.</li>
+      <li>Run <code>RDPConf.exe</code>, check if it shows <strong>fully supported</strong>, then click <strong>Apply</strong> and <strong>OK</strong>.</li>
+      <li>Go to Windows Services and restart the <strong>Remote Desktop Service</strong>.</li>
+      <li>Test multiple user logins.</li>
+    </ol>
+  </main>
+</body>
+</html>

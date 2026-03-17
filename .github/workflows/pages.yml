@@ -1,0 +1,88 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build static site and SEO files
+        shell: bash
+        run: |
+          set -euo pipefail
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+          if [ "${REPO}" = "${OWNER}.github.io" ]; then
+            BASE_URL="https://${OWNER}.github.io/"
+          else
+            BASE_URL="https://${OWNER}.github.io/${REPO}/"
+          fi
+
+          mkdir -p _site
+          rsync -av --exclude '.git' --exclude '.github' --exclude '_site' ./ _site/
+
+          cat > _site/sitemap.xml <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url>
+              <loc>${BASE_URL}</loc>
+              <changefreq>weekly</changefreq>
+              <priority>1.0</priority>
+            </url>
+          </urlset>
+          EOF
+
+          cat > _site/robots.txt <<EOF
+          User-agent: *
+          Allow: /
+          Sitemap: ${BASE_URL}sitemap.xml
+          EOF
+
+          python - << 'PY'
+          import pathlib
+          import os
+
+          index_path = pathlib.Path('_site/index.html')
+          base_url = os.environ.get('BASE_URL')
+          html = index_path.read_text(encoding='utf-8')
+
+          canonical = f'<link rel="canonical" href="{base_url}" />'
+          og_url = f'<meta property="og:url" content="{base_url}" />'
+
+          if canonical not in html:
+            html = html.replace('</head>', f'  {canonical}\n  {og_url}\n</head>')
+
+          index_path.write_text(html, encoding='utf-8')
+          PY
+        env:
+          BASE_URL: ${{ github.event.repository.name == format('{0}.github.io', github.repository_owner) && format('https://{0}.github.io/', github.repository_owner) || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
